@@ -1,0 +1,124 @@
+﻿@using System.Data;
+@model DataTable;
+@using Demo_Areas.Areas.MST_Student.Models
+﻿@{
+    Layout = "~/Views/shared/_Layout.cshtml";
+    MST_StudentFilterModel FilterModel = new MST_StudentFilterModel();
+}
+
+<div class="body">
+    <div class="d-flex mt-3 mb-3">
+        <h3>Student List</h3>
+    </div>
+
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <form class="row">
+                    <div>
+                        <h2>Filter</h2>
+                    </div>
+                    <div class="col-4">
+                        <select class="form-control" asp-for="@FilterModel.CityID" asp-items="@(new SelectList(ViewBag.CityList,"CityID","CityName"))">
+                            <option value="">Select City</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <select class="form-control" asp-for="@FilterModel.BranchID" asp-items="@(new SelectList(ViewBag.BranchList,"BranchID","BranchName"))">
+                            <option value="">Select Branch</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control" asp-for="@FilterModel.StudentName" placeholder="StudentName" />
+                    </div>
+                    <div class="col my-2">
+                    </div>
+                </form>
+            </div>
+            <div class="justify-content-around">
+                <button class="btn btn-success" type="submit" asp-area="MST_Student" asp-controller="MST_Student" asp-action="MST_StudentFilter">Search</button>
+                <button class="btn btn-danger" type="submit" runat="server" OnClientClick="this.form.reset();return false;">Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <hr style="height:20px">
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <h5 class="">State List</h5>
+
+                <div class="add-button mr-auto">
+                    <a asp-area="LOC_State" asp-controller="LOC_State" asp-action="Add">
+                        <input type="button" class="btn btn-success" value="Add State" />
+                    </a>
+                </div>
+
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover mt-3">
+                    <thead>
+                        <tr>
+                            <th scope="col">StudentID</th>
+                            <th scope="col">BranchID</th>
+                            <th scope="col">CityID</th>
+                            <th scope="col">StudentName</th>
+                            <th scope="col">MobileNoStudent</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">MobileNoFather</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">BirthDate</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">IsActive</th>
+                            <th scope="col">Gender</th>
+                            <th scope="col">Password</th>
+                            <th scope="col">Created</th>
+                            <th scope="col">Modified</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sample_2">
+                        @foreach (DataRow dr in Model.Rows)
+                        {
+                            <tr>
+                                <td>@dr["StudentID"]</td>
+                                <td>@dr["BranchID"]</td>
+                                <td>@dr["CityID"]</td>
+                                <td>@dr["StudentName"]</td>
+                                <td>@dr["MobileNoStudent"]</td>
+                                <td>@dr["Email"]</td>
+                                <td>@dr["MobileNoFather"]</td>
+                                <td>@dr["Address"]</td>
+                                <td>@Convert.ToDateTime(dr["BirthDate"]).ToString("dd-MM-yyyy")</td>
+                                <td>@dr["Age"]</td>
+                                <td>@dr["IsActive"]</td>
+                                <td>@dr["Gender"]</td>
+                                <td>@dr["Password"]</td>
+                                <td>@Convert.ToDateTime(dr["Created"]).ToString("dd-MM-yyyy")</td>
+                                <td>@Convert.ToDateTime(dr["Modified"]).ToString("dd-MM-yyyy")</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <div class="me-2">
+                                            <form method="post" asp-area="MST_Student" asp-controller="MST_Student" asp-action="MST_StudentDelete">
+                                                <input type="hidden" value="@Convert.ToInt32(dr["StudentID"])" name="StudentID" />
+                                                <button type="submit" class="btn btn-danger" value="Delete">Delete</button>
+                                            </form>
+                                        </div>
+                                        <div class="ms-2">
+                                            <form asp-area="MST_Student" asp-controller="MST_Student" asp-action="MST_StudentAdd">
+                                                <input type="hidden" value="@Convert.ToInt32(dr["StudentID"])" name="StudentID" />
+                                                <button type="submit" class="btn btn-info" value="Update">Update</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+
+</div>

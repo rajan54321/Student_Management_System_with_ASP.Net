@@ -1,0 +1,115 @@
+﻿@using System.Data
+@model DataTable
+@using Demo_Areas.Areas.LOC_State.Models
+@{
+    LOC_StateFilterModel FilterModel = new LOC_StateFilterModel();
+    Layout = "~/Views/shared/_Layout.cshtml";
+}
+<div class="d-flex mt-3 mb-3">
+    <h3>List of States</h3>
+</div>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <form class="row">
+                <div>
+                    <h2>Filter</h2>
+                </div>
+                <div class="col-4">
+                    <select class="form-control" asp-for="@FilterModel.CountryID" asp-items="@(new SelectList(ViewBag.CountryList,"CountryID","CountryName"))">
+                        <option value="">Select Country</option>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <input type="text" class="form-control" asp-for="@FilterModel.StateName" placeholder="StateName" />
+                </div>
+                <div class="col-4">
+                    <input type="text" class="form-control" asp-for="@FilterModel.StateCode" placeholder="StateCode" />
+                </div>
+                <div class="col my-2">
+                </div>
+            </form>
+        </div>
+        <div class="justify-content-around">
+            <button class="btn btn-success" type="submit" asp-area="LOC_State" asp-controller="LOC_State" asp-action="LOC_StateFilter">Search</button>
+            <button class="btn btn-danger" type="submit" runat="server" OnClientClick="this.form.reset();return false;">Clear</button>
+        </div>
+    </div>
+</div>
+
+<hr style="height:20px">
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h5 class="">State List</h5>
+
+        <div class="add-button mr-auto">
+            <a asp-area="LOC_State" asp-controller="LOC_State" asp-action="Add">
+                <input type="button" class="btn btn-success" value="Add State" />
+            </a>
+        </div>
+
+    </div>
+    <div class="card-body">
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">StateID</th>
+                    <th scope="col">StateName</th>
+                    <th scope="col">StateCode</th>
+                    <th scope="col">CountryName</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Modified</th>
+                    <th scope="col" colspan="2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow dr in Model.Rows)
+                {
+                    <tr>
+                        <td>@dr["StateID"]</td>
+                        <td>@dr["StateName"]</td>
+                        <td>@dr["StateCode"]</td>
+                        <td>@dr["CountryName"]</td>
+                        <td>@Convert.ToDateTime(dr["Created"]).ToString("dd-MM-yyyy")</td>
+                        <td>@Convert.ToDateTime(dr["Modified"]).ToString("dd-MM-yyyy")</td>
+                        <td>
+                            <div class="d-flex">
+                                <div class="me-2">
+                                    <form method="post" asp-area="LOC_State" asp-controller="LOC_State" asp-action="Delete">
+                                        <input type="hidden" value="@Convert.ToInt32(dr["StateID"])" name="StateID" />
+                                        <button type="submit" class="btn btn-danger" value="Delete" onclick="return fun1();">Delete</button>
+                                    </form>
+                                </div>
+                                <div class="ms-2">
+                                    <form asp-area="LOC_State" asp-controller="LOC_State" asp-action="Add">
+                                        <input type="hidden" value="@Convert.ToInt32(dr["StateID"])" name="StateID" />
+                                        <button type="submit" class="btn btn-info" value="Update">Update</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+
+@section Scripts
+    {
+    <script>
+        function fun1() {
+            if (confirm("Are you sure you want to delete?")) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    </script>
+}

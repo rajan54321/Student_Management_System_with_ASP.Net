@@ -1,0 +1,123 @@
+﻿@using System.Data
+@model DataTable
+@using Demo_Areas.Areas.LOC_City.Models
+@{
+    Layout = "~/Views/shared/_Layout.cshtml";
+    LOC_CityFilterModel FilterModel = new LOC_CityFilterModel();
+}
+<div class="d-flex mt-3 mb-3">
+    <h3>List of Cities</h3>
+</div>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <form class="row">
+                <div>
+                    <h2>Filter</h2>
+                </div>
+                <div class="col-3">
+                    <select class="form-control" asp-for="@FilterModel.CountryID" asp-items="@(new SelectList(ViewBag.CountryList,"CountryID","CountryName"))">
+                        <option value="">Select Country</option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <select class="form-control" asp-for="@FilterModel.StateID" asp-items="@(new SelectList(ViewBag.StateList,"StateID","StateName"))">
+                        <option value="">Select State</option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <input type="text" class="form-control" asp-for="@FilterModel.CityName" placeholder="CityName" />
+                </div>
+                <div class="col-3">
+                    <input type="text" class="form-control" asp-for="@FilterModel.CityCode" placeholder="CityCode" />
+                </div>
+            </form>               
+        </div>
+        <div class="justify-content-around">
+            <button class="btn btn-success" type="submit" asp-area="LOC_City" asp-controller="LOC_City" asp-action="LOC_CityFilter">Search</button>
+            <button class="btn btn-danger" type="submit" runat="server" OnClientClick="this.form.reset();return false;">Clear</button>
+        </div>
+    </div>
+</div>
+
+<hr style="height:20px">
+
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h5 class="">City List</h5>
+
+        <div class="add-button mr-auto">
+            <a asp-area="LOC_City" asp-controller="LOC_City" asp-action="Add">
+                <input type="button" class="btn btn-success" value="Add City" />
+            </a>
+        </div>
+
+    </div>
+    <div class="card-body">
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">CityID</th>
+                    <th scope="col">CityName</th>
+                    <th scope="col">CityCode</th>
+                    <th scope="col">StateName</th>
+                    <th scope="col">CountryName</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Modified</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow dr in Model.Rows)
+                {
+                    <tr>
+                        <td>@dr["CityID"]</td>
+                        <td>@dr["CityName"]</td>
+                        <td>@dr["CityCode"]</td>
+                        <td>@dr["StateName"]</td>
+                        <td>@dr["CountryName"]</td>
+                        <td>@Convert.ToDateTime(dr["CreationDate"]).ToString("dd-MM-yyyy")</td>
+                        <td>@Convert.ToDateTime(dr["Modified"]).ToString("dd-MM-yyyy")</td>
+                        <td>
+                            <div class="d-flex">
+                                <div class="me-2">
+                                    <form method="post" asp-area="LOC_City" asp-controller="LOC_City" asp-action="Delete">
+                                        <input type="hidden" value="@Convert.ToInt32(dr["CityID"])" name="CityID" />
+                                        <button type="submit" class="btn btn-danger" value="Delete" onclick="return fun1();">Delete</button>
+                                    </form>
+                                </div>
+                                <div class="ms-2">
+                                    <form asp-area="LOC_City" asp-controller="LOC_City" asp-action="Add">
+                                        <input type="hidden" value="@Convert.ToInt32(dr["CityID"])" name="CityID" />
+                                        <button type="submit" class="btn btn-info" value="Update">Update</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+
+
+
+@section Scripts
+    {
+    <script>
+        function fun1() {
+            if (confirm("Are you sure you want to delete?")) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    </script>
+}

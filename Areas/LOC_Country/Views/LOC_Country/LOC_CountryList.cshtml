@@ -1,0 +1,114 @@
+﻿@using System.Data
+@model DataTable
+@{
+    Layout = "~/Views/shared/_Layout.cshtml";
+}
+
+<div class="d-flex mt-3 mb-3">
+    <h3>List of Countries</h3>
+</div>
+
+@*<div class="table-header d-flex">
+   
+    <div class="search-field col-xl-4 ms-lg-auto d-flex">
+        <div class="me-3">
+
+            <form class="d-flex" method="get" asp-area="LOC_Country" asp-controller="LOC_Country" asp-action="LOC_CountrySearchByName">
+                <input class="form-control me-3" type="search" placeholder="Search" aria-label="Search" runat="server" name="CountryName" />
+                <div><button type="submit" class="btn btn-outline-success" value="Search" runat="server">Search</button></div>
+            </form>
+        </div>
+    </div>
+</div>
+*@
+@*<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <form class="row">
+                <div>
+                    <h2>Filter</h2>
+                </div>
+                <div class="col-3">
+                    <select class="form-control" asp-for="@FilterModel.CountryID" asp-items="@(new SelectList(ViewBag.CountryList,"CountryID","CountryName"))">
+                        <option value="">Select Country</option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <select class="form-control" asp-for="@FilterModel.StateID" asp-items="@(new SelectList(ViewBag.StateList,"StateID","StateName"))">
+                        <option value="">Select State</option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <input type="text" class="form-control" asp-for="@FilterModel.CityName" placeholder="CityName" />
+                </div>
+                <div class="col-3">
+                    <input type="text" class="form-control" asp-for="@FilterModel.CityCode" placeholder="CityCode" />
+                </div>
+            </form>
+        </div>
+        <div class="justify-content-around">
+            <button class="btn btn-success" type="submit" asp-area="LOC_Country" asp-controller="LOC_Country" asp-action="LOC_CountryFilter">Search</button>
+            <button class="btn btn-danger" type="submit" runat="server" OnClientClick="this.form.reset();return false;">Clear</button>
+        </div>
+    </div>
+</div>*@
+
+<hr style="height:20px">
+
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h5 class="">Country List</h5>
+   
+        <div class="add-button mr-auto">
+            <a asp-area="LOC_Country" asp-controller="LOC_Country" asp-action="Add">
+                <input type="button" class="btn btn-success" value="Add Country" />
+            </a>
+        </div>
+
+    </div>
+    <div class="card-body">
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">CountryID</th>
+                    <th scope="col">CountryName</th>
+                    <th scope="col">CountryCode</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Modified</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow dr in Model.Rows)
+                {
+                    <tr>
+                        <td>@dr["CountryID"]</td>
+                        <td>@dr["CountryName"]</td>
+                        <td>@dr["CountryCode"]</td>
+                        <td>@Convert.ToDateTime(dr["Created"]).ToString("dd-MM-yyyy")</td>
+                        <td>@Convert.ToDateTime(dr["Modified"]).ToString("dd-MM-yyyy")</td>
+                        <td>
+                            <div class="d-flex">
+                                <div class="me-2">
+                                    <form method="post" asp-area="LOC_Country" asp-controller="LOC_Country" asp-action="Delete">
+                                        <input type="hidden" value="@Convert.ToInt32(dr["CountryID"])" name="CountryID" />
+                                        <button type="submit" class="btn btn-danger" value="Delete">Delete</button>
+                                    </form>
+                                </div>
+                                <div class="ms-2">
+                                    <form asp-area="LOC_Country" asp-controller="LOC_Country" asp-action="Add">
+                                        <input type="hidden" value="@Convert.ToInt32(dr["CountryID"])" name="CountryID" />
+                                        <button type="submit" class="btn btn-info" value="Update">Update</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
